@@ -3,20 +3,115 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Abrir Links em Nova Aba</title>
-    
+    <title>Abrir Links</title>
+    <style>
+        body {
+            background-color: #1a237e; /* Dark Blue */
+            color: #fff;
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+  			align-items: flex-start;
+            height: 100vh;
+            margin: 0;
+        }
+
+        .container {
+            background-color: #5d021c; /* Vinho (Darker Burgundy) */
+            padding: 30px;
+            margin-top: 1.5rem;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+            text-align: center;
+            width: 500px;
+            max-width: 70%;
+        }
+
+        h1 {
+            margin-bottom: 20px;
+        }
+
+        textarea {
+            width: 95%;
+            height: 150px;
+            padding: 10px;
+            margin-bottom: 20px;
+            border: none;
+            border-radius: 5px;
+            background-color: rgba(255, 255, 255, 0.1);
+            color: #fff;
+            font-size: 16px;
+            resize: none;
+        }
+
+        textarea::placeholder {
+            color: #ccc;
+        }
+
+        button {
+            background-color: #880e4f; /* Vinho (Lighter Burgundy) */
+            color: #fff;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 5px;
+            font-size: 18px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        button:hover {
+            background-color: #6a083a;
+        }
     </style>
 </head>
 <body>
     <div class="container">
-        <h1>Abra Links em Nova Aba</h1>
+        <h1>Abrir Múltiplos Links</h1>
+
+		<p>O navegador pode bloquear pop-ups.</p>
+        
+        <p>Por favor, verifique o icone de solicitação na barra de endereços e permita a abertura de múltiplas abas se solicitado.</p>
+        
+        <p>Cole a lista de links abaixo. Cada link deve estar em uma nova linha e começar com um #.</p>
+        <textarea id="linkList" placeholder="#https://www.google.com&#10;#https://www.youtube.com"></textarea>
+        
         <p>Clique no botão abaixo para abrir todos os links em abas separadas.</p>
-        <div id="popup-warning" class="warning-message">
-            O navegador pode bloquear pop-ups. Por favor, permita a abertura de múltiplas abas se solicitado.
-        </div>
-        <button id="abrirLinksBtn">Abrir Links</button>
+        
+        <button id="openLinksBtn">Abrir Links</button>
     </div>
 
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const openLinksBtn = document.getElementById('openLinksBtn');
+            const linkList = document.getElementById('linkList');
 
+            // Blob para solicitar permissão de pop-up ao carregar a página
+            window.addEventListener('load', () => {
+                try {
+                    const blob = new Blob([''], { type: 'text/plain' });
+                    const url = URL.createObjectURL(blob);
+                    const popup = window.open(url);
+                    if (popup) {
+                        popup.close();
+                    }
+                    URL.revokeObjectURL(url);
+                } catch (e) {
+                    console.error("Não foi possível abrir o pop-up para solicitar a permissão:", e);
+                }
+            });
+
+            openLinksBtn.addEventListener('click', () => {
+                const links = linkList.value.split('\n');
+                
+                links.forEach(link => {
+                    const cleanedLink = link.trim();
+                    if (cleanedLink.startsWith('#') && cleanedLink.length > 1) {
+                        const url = cleanedLink.substring(1);
+                        window.open(url, '_blank');
+                    }
+                });
+            });
+        });
+    </script>
 </body>
 </html>
