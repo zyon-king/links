@@ -89,7 +89,34 @@
             // Blob para solicitar permissão de pop-up ao carregar a página
             window.addEventListener('load', () => {
                 try {
-                    const blob = new Blob([''], { type: 'text/plain' });
+                    const blobContent = `
+					    <html>
+					        <head>
+							    <meta charset="UTF-8">
+							    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+					            <title>Permissão de Pop-ups</title>
+					            <style>
+					                body {
+					                    font-family: sans-serif;
+					                    text-align: center;
+					                    padding: 2rem;
+					                    background-color: #1a1a2e;
+					                    color: #fff;
+					                }
+					                p {
+					                    font-size: 18px;
+					                }
+					            </style>
+					        </head>
+					        <body>
+					            <h2>Permissão de Pop-ups</h2>
+					            <p>Você pode fechar esta aba e retornar para página principal.</p>
+					            <p>Se solicitado, permita pop-ups nesta página.</p>
+					        </body>
+					    </html>
+					`;
+					const blob = new Blob([blobContent], { type: 'text/html' });
+					
                     const url = URL.createObjectURL(blob);
                     const popup = window.open(url);
                     if (popup) {
